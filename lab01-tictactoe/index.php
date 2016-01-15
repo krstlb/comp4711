@@ -6,6 +6,7 @@
     </head>
     <body>
         <?php
+        // Initialize the board and start a new game.
         if(!isset($_GET['board'])){
             $position = '---------';
         } else {
@@ -13,6 +14,9 @@
         }
         $game = new Game($position);
 
+        /**
+         * Class Game representing the Tic Tac Toe board.
+         */
         class Game
         {
             var $position;
@@ -35,7 +39,12 @@
                 $this->display();
             }
 
-            // Function if there was a winner
+            /**
+             * Function to determine if one of the tokens have won by checking for three tokens in a row
+             * (vertically, horizontally or diagonally.)
+             * @param $token 'x' or 'o'
+             * @return bool true if winner is found
+             */
             function winner($token)
             {
                 $won = false;
@@ -75,7 +84,9 @@
                 return $won;
             }
 
-            //Function to display the current gameboard
+            /**
+             * Function to display the current gameboard.
+             */
             function display()
             {
                 echo '<table cols="3" style="font-size:48px; font-weight:bold">';
@@ -88,22 +99,27 @@
                 echo '</table>';
             }
 
-            //Helper function to display, showing the cell contents
+            /**
+             * Helper function to display, showing the cell contents
+             * @param $which the token to display
+             * @return string html string to show cell
+             */
             function show_cell($which)
             {
                 $token = $this->position[$which];
-                //deal with the easy case
                 if ($token <> '-')
                     return '<td>' . $token . '</td>';
-                //hard case
-                $this->newposition = $this->position; //copy original
-                $this->newposition[$which] = 'x'; //their move
-                $move = implode($this->newposition); //make a string from the board array
+
+                $this->newposition = $this->position;
+                $this->newposition[$which] = 'x';
+                $move = implode($this->newposition);
                 $link = '?board=' . $move;
                 return '<td><a href="' . $link . '">-</a></td>';
             }
 
-            //Automatically picks a move by selecting the next available cell
+            /**
+             * Simple AI to pick the next available cell on the board.
+             */
             function pick_move()
             {
                 for ($pos = 0; $pos < 9; $pos++) {
